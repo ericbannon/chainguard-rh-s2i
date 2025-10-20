@@ -1,11 +1,9 @@
 #!/bin/sh
-set -eu
+set -euo pipefail
 cd /opt/app
 
-# Prefer venv if present
-if [ -x /opt/app/.venv/bin/python ]; then
-  exec ${PYTHON_RUN_CMD:-/opt/app/.venv/bin/python app.py}
-fi
+PORT="${PORT:-8080}"
+VENV_DIR="/opt/app/venv"
 
-# Fallback to system python
-exec ${PYTHON_RUN_CMD:-python app.py}
+# run gunicorn from the venv (no reliance on PATH)
+exec "$VENV_DIR/bin/python" -m gunicorn -b "0.0.0.0:${PORT}" app:app

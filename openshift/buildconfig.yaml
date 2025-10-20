@@ -1,0 +1,19 @@
+apiVersion: build.openshift.io/v1
+kind: BuildConfig
+metadata:
+  name: py-s2i-test
+spec:
+  source:
+    type: Binary
+  strategy:
+    type: Source
+    sourceStrategy:
+      from:
+        kind: DockerImage
+        name: docker.io/bannimal/python-cg-s2i-builder:v6   # <- your latest builder tag
+  output:
+    to:
+      kind: ImageStreamTag
+      name: py-s2i-test:latest
+  triggers:
+  - type: ConfigChange

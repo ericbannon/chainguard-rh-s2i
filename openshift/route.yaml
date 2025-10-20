@@ -1,0 +1,10 @@
+apiVersion: route.openshift.io/v1
+kind: Route
+metadata:
+  name: py-s2i-app
+spec:
+  to:
+    kind: Service
+    name: py-s2i-app
+  port:
+    targetPort: 8080

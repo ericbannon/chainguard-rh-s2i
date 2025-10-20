@@ -1,0 +1,32 @@
+apiVersion: apps.openshift.io/v1
+kind: DeploymentConfig
+metadata:
+  name: py-s2i-app
+spec:
+  replicas: 1
+  selector:
+    app: py-s2i-app
+  template:
+    metadata:
+      labels:
+        app: py-s2i-app
+    spec:
+      containers:
+      - name: py-s2i-app
+        # Will be set by image change trigger below
+        image: ''
+        ports:
+        - containerPort: 8080
+        env:
+        - name: PORT
+          value: "8080"
+  triggers:
+  - type: ConfigChange
+  - type: ImageChange
+    imageChangeParams:
+      automatic: true
+      containerNames:
+      - py-s2i-app
+      from:
+        kind: ImageStreamTag
+        name: py-s2i-test:latest

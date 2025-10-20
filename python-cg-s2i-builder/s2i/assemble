@@ -1,24 +1,18 @@
 #!/bin/sh
-set -eu
-cd /tmp/src
+set -euo pipefail
 
-# Restore cached venv if present (incremental builds)
-if [ -d /tmp/artifacts/venv ]; then
-  cp -a /tmp/artifacts/venv /opt/app/.venv
+APP_DIR=/opt/app
+SRC_DIR="${S2I_SOURCE_DIR:-/tmp/src}"
+VENV_DIR="$APP_DIR/venv"
+
+# copy source
+mkdir -p "$APP_DIR"
+cp -R "${SRC_DIR}/." "$APP_DIR/"
+
+# create a project venv and install deps there
+python -m venv "$VENV_DIR"
+# use the venv's pip explicitly (no root needed)
+"$VENV_DIR/bin/pip" install --no-cache-dir --upgrade pip wheel setuptools
+if [ -f "$APP_DIR/requirements.txt" ]; then
+  "$VENV_DIR/bin/pip" install --no-cache-dir -r "$APP_DIR/requirements.txt"
 fi
-
-# Ensure writable app dir for arbitrary UID
-mkdir -p /opt/app
-chgrp -R 0 /opt/app || true
-chmod -R g+rwX /opt/app || true
-
-# Install deps into a venv (keeps image clean)
-if [ -f requirements.txt ]; then
-  if [ ! -x /opt/app/.venv/bin/python ]; then
-    python -m venv /opt/app/.venv
-  fi
-  /opt/app/.venv/bin/pip install --no-cache-dir -r requirements.txt
-fi
-
-# Copy source after deps so code changes don’t bust cache
-cp -R . /opt/app
