@@ -19,5 +19,5 @@ EXPOSE 8080
 WORKDIR /opt/app
 USER 65532
 
-# 👇 This makes the final app image start via your S2I run script automatically
+# This makes the final app image start via your S2I run script automatically
 ENTRYPOINT ["/usr/libexec/s2i/run"]
