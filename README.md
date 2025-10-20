@@ -16,33 +16,7 @@ We’re testing a “S2I-lite” approach — keeping the clean, minimal Chaingu
 
 ## Usage Steps
 
-### 1. Build & Test in Openshift
----
-Build the S2I-enabled Builder Image
-
-```bash
-oc new-build --binary --name python-cg-s2i-builder
-oc start-build python-cg-s2i-builder --from-dir ./python-cg-s2i-builder --follow
-```
-
-### 2. Build the sample Flask App
-
-```
-oc new-build --strategy=source \
-  --name py-s2i-test \
-  --image-stream=python-cg-s2i-builder\
-  --binary
-
-oc start-build py-s2i-test --from-dir ./myapp --follow
-```
-
-### 3. Deploy the App
-
-```
-oc new-app py-s2i-test
-oc expose svc/py-s2i-test
-oc get route py-s2i-test -o jsonpath='{.spec.host}{"\n"}'
-```
+Chainguard Python-based S2I image here: https://hub.docker.com/repository/docker/bannimal/python-cg-s2i-builder/tags
 
 # Sample Test using public repo builder image
 
@@ -50,7 +24,7 @@ oc get route py-s2i-test -o jsonpath='{.spec.host}{"\n"}'
 oc new-project s2i 2>/dev/null || oc project s2i
 
 oc new-build --strategy=source --name py-s2i-test \
-  --image=docker.io/bannimal/python-cg-s2i-builder:v4 --binary
+  --image=docker.io/bannimal/python-cg-s2i-builder:v8 --binary
 
 oc start-build py-s2i-test --from-dir ./myapp --follow --wait
 oc new-app py-s2i-test
