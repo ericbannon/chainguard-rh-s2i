@@ -1,4 +1,4 @@
-# Chainguard Python + OpenShift S2I Integration Test
+# Chainguard Python + OpenShift S2I Integration
 
 This repository demonstrates how to use Chainguard base images (in this case, the Python 3.12 image) as a Source-to-Image (S2I) builder in OpenShift with minimal friction.
 
