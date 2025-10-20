@@ -17,12 +17,15 @@ Useful for organizations that leverage a OpenShift S2I (Source-to-Image), which 
 * The S2I builder (python-cg-s2i-builder) encodes the build logic — e.g., assemble for dependency install and run for runtime behavior. Developers just commit requirements.txt and app.py.
 
 **Builds run inside OpenShift**
+
 The cluster invokes the builder image in a controlled pod — no local Docker daemon needed, no privileged build context. It produces an ImageStream managed by OpenShift.
 
 **Outputs deploy automatically**
+
 The resulting image (based on a Chainguard base) is deployed directly to OpenShift via Deployment/Route — fully traceable from source → image → pod.
 
 **Security/Compliance wins**
+
 - All layers originate from Chainguard’s signed images.- No custom Dockerfile drift.- Builds happen in-cluster under RBAC & network policies.- Dependencies resolved through Chainguard Python ecosystem if desired.
 
 ---
