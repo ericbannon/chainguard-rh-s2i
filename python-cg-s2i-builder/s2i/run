@@ -1,0 +1,11 @@
+#!/bin/sh
+set -eu
+cd /opt/app
+
+# Prefer venv if present
+if [ -x /opt/app/.venv/bin/python ]; then
+  exec ${PYTHON_RUN_CMD:-/opt/app/.venv/bin/python app.py}
+fi
+
+# Fallback to system python
+exec ${PYTHON_RUN_CMD:-python app.py}

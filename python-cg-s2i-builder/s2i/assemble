@@ -1,0 +1,24 @@
+#!/bin/sh
+set -eu
+cd /tmp/src
+
+# Restore cached venv if present (incremental builds)
+if [ -d /tmp/artifacts/venv ]; then
+  cp -a /tmp/artifacts/venv /opt/app/.venv
+fi
+
+# Ensure writable app dir for arbitrary UID
+mkdir -p /opt/app
+chgrp -R 0 /opt/app || true
+chmod -R g+rwX /opt/app || true
+
+# Install deps into a venv (keeps image clean)
+if [ -f requirements.txt ]; then
+  if [ ! -x /opt/app/.venv/bin/python ]; then
+    python -m venv /opt/app/.venv
+  fi
+  /opt/app/.venv/bin/pip install --no-cache-dir -r requirements.txt
+fi
+
+# Copy source after deps so code changes don’t bust cache
+cp -R . /opt/app

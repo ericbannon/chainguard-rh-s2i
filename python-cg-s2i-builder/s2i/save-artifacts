@@ -1,0 +1,6 @@
+#!/bin/sh
+set -eu
+if [ -d /opt/app/.venv ]; then
+  mkdir -p /tmp/artifacts
+  cp -a /opt/app/.venv /tmp/artifacts/venv
+fi
